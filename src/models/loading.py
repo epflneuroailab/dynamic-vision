@@ -10,8 +10,8 @@ from brainscore_vision.model_helpers.activations.temporal.core.inferencer import
 from .convert_image_model import _image_to_temporal_model
 from .sparse_random_projection import _register_downsampling_hook
 from .groups import STATIC_MODELS, RECURRENT_MODELS, KADIR_MODELS
-from . import extra
-from .extra import finetune as finetune_module
+# from . import extra
+# from .extra import finetune as finetune_module
 
 
 def brainscore_load_model(model_identifier):
@@ -40,6 +40,10 @@ def load_model(
         model_identifier = "-".join(model_identifier.split("-")[1:])
         downsample_features = False
 
+    token_average = model_identifier.startswith("TokenAverage-")
+    if token_average:
+        model_identifier = "-".join(model_identifier.split("-")[1:])
+
     model = brainscore_load_model(model_identifier)
     layers = _get_layers(model) if model_identifier in KADIR_MODELS else model.layers
     if model_identifier == "CORnet-S":
@@ -62,7 +66,7 @@ def load_model(
 
     # register hooks for model activation downsampling
     if downsample_features:
-        model = _register_downsampling_hook(model)
+        model = _register_downsampling_hook(model, average_token=token_average)
 
     print(f"Using {inference_mode} inferencer")
     print("======== Model loaded ========")
@@ -83,6 +87,10 @@ def load_model(
     if no_downsample:
         model.identifier = f"NoDownsample-{model_identifier}"
         model._extractor._identifier = f"NoDownsample-{model_identifier}"
+
+    if token_average:
+        model.identifier = f"TokenAverage-{model_identifier}"
+        model._extractor._identifier = f"TokenAverage-{model_identifier}"
 
     return model, layers
 

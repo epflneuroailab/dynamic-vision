@@ -180,9 +180,6 @@ def get_projection(source, target_size, seed, parallel=True, batch_size=4):
 
     matrix = sparse_random_matrix(target_size, source_size, random_state=seed)
     
-    # import time
-    # a = time.time()
-    # print(f"Source size: {source_size}")
     if True:
         ret = dense_sparse_mult(source, matrix.T)
     elif source_size < 50_000:
@@ -191,16 +188,15 @@ def get_projection(source, target_size, seed, parallel=True, batch_size=4):
         batches = [source[i:i+batch_size] for i in range(0, source.shape[0], batch_size)]
         ret = mapper(_compute_delayed(batch, matrix) for batch in batches)
         ret = np.concatenate(ret, axis=0)
-    # b = time.time()
-    # print(f"Time: {b-a}")
     return ret
 
 class RandomProjection:
-    def __init__(self, activations_extractor, n_components):
+    def __init__(self, activations_extractor, n_components, average_token):
         self.handle = True
         self.n_components = n_components
         self._extractor = activations_extractor
         self._inferencer = activations_extractor.inferencer
+        self.average_token = average_token
 
     def __call__(self, activations, layer_name, stimulus):
         if self.handle:
@@ -216,6 +212,14 @@ class RandomProjection:
                 activations = np.expand_dims(activations, 0)
 
             def apply_random_proj(activations):
+
+                # monkey patch for transformers
+                if self.average_token:
+                    assert layer_spec.index("C") == (len(layer_spec) - 1)
+                    C_dim = activations.shape[-1]
+                    T_dim = activations.shape[0]
+                    activations = activations.reshape(T_dim, -1, C_dim).mean(1)
+
                 activations = flatten(activations)
                 source_size = activations.shape[1]
                 target_size = self.n_components
@@ -252,11 +256,10 @@ class RandomProjection:
             activations = activations.astype(dtype)
 
         return activations
-    
 
-def _register_downsampling_hook(model, downsample_to=5000):
+def _register_downsampling_hook(model, downsample_to=5000, average_token=False):
     print(f"Downsample model activations to {downsample_to} using sparse random projection.")
     extractor = model.activations_model._extractor
-    layer_random_proj = RandomProjection(extractor, n_components=downsample_to)
-    extractor.inferencer._executor.register_after_hook(layer_random_proj)
+    layer_random_proj = RandomProjection(extractor, n_components=downsample_to, average_token=average_token)
+    extractor.inferencer._executor.register_after_hook("random_downsample", layer_random_proj)
     return model

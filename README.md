@@ -78,9 +78,9 @@ downsampling, temporal conversion and random initialization.
 
 ```bash
 # install core dependencies
-pip install numpy scipy pandas xarray scikit-learn torch torchvision
-pip install h5py tables matplotlib opencv-python requests
-pip install brainscore-core brainscore-vision brainio
+pip install numpy scipy pandas scikit-learn torch torchvision h5py matplotlib opencv-python
+pip install brainscore-core brainscore-vision brainio nilearn
+pip install git+https://github.com/YingtianDt/neuroparc.git
 ```
 
 Set `RESULTCACHING_HOME`, `BRAINIO_HOME`, `BRAINSCORE_HOME`, `TORCH_HOME`,
@@ -96,19 +96,28 @@ dataset/task names.  Examples:
 
 * **Behaviour** – compare a model to human choices:
   ```bash
+  python -m src.data.behaviour.cache
   python score_behaviour.py --model alexnet --tasks rajalingham2018
   ```
 * **Electrodes** – fit the model to neuronal recordings:
   ```bash
+  python -m src.data.electrodes.cache
   python score_electrodes.py --model resnet50_imagenet_full \
     --datasets freemanziemba2013-V4 crcns-pvc1
   ```
 * **fMRI** – evaluate on one or more fMRI datasets (optionally convolving with an HRF):
   ```bash
+  python -m src.data.fmri.cache
+
+  # to reproduce the results
+  python score_fmri.py --model r3d_18 --datasets all
+
+  # or a subset of datasets
   python score_fmri.py --model r3d_18 --datasets mcmahon2023-fmri keles2024-fmri
   ```
 * **Tasks** – run standard vision benchmarks using logistic or ridge decoding:
   ```bash
+  python -m src.data.tasks.cache
   python score_task.py --model resnet50_imagenet_full --tasks imagenet2012 selfmotion
   ```
 

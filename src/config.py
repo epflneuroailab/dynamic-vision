@@ -1,12 +1,17 @@
 import os
 
 
-os.environ["RESULTCACHING_HOME"] = r"/home/ytang/workspace/data/cache/.resultcaching"
-os.environ['MMAP_HOME'] = r'/home/ytang/workspace/data/acache/mmap'
-os.environ["BRAINIO_HOME"] = r"/home/ytang/workspace/data/cache/.brainio2"
-os.environ["BRAINSCORE_HOME"] = r"/home/ytang/workspace/data/cache/.brain-score"
-os.environ['TORCH_HOME'] = r'/home/ytang/workspace/data/cache/.torch'
-os.environ['HF_HOME'] = r'/home/ytang/workspace/data/cache/.hf'
+# dir_path = os.path.dirname(os.path.abspath(__file__))
+dir_path = "/mnt/scratch/ytang/migrate"
+CACHE_HOME = os.path.join(dir_path, 'cache')
+
+os.environ["RESULTCACHING_HOME"] = f"{CACHE_HOME}/.resultcaching"
+os.environ['MMAP_HOME'] = f'{CACHE_HOME}/.mmap'
+os.environ["BRAINIO_HOME"] = f"{CACHE_HOME}/.brainio2"
+os.environ["BRAINSCORE_HOME"] = f"{CACHE_HOME}/.brain-score"
+os.environ['TORCH_HOME'] = f'{CACHE_HOME}/.torch'
+os.environ['HF_HOME'] = f'{CACHE_HOME}/.hf'
+os.environ["STORE_HOME"] = f"{CACHE_HOME}/.store"
 
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 os.environ["RESULTCACHING_DISABLE"] = '0'

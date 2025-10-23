@@ -5,7 +5,8 @@ import shutil
 
 from . import config
 
-DEFAULT_ROOT = '/home/ytang/workspace/data/acache'
+DEFAULT_ROOT = os.environ.get('STORE_HOME')
+assert DEFAULT_ROOT is not None, "Please set STORE_HOME."
 
 class PickleStore:
     def __init__(self, root=DEFAULT_ROOT):

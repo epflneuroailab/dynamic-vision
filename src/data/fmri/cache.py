@@ -2,36 +2,29 @@ import os
 import pickle
 from .. import data_store
 
-from . import savasegal2023, keles2024, berezutskaya2021, mcmahon2023, lahner2024
+def _fake_load_from_brainscore(name):
+    import sys
+    sys.path.insert(0, '/mnt/scratch/ytang/migrate')
+    from datasets import load_data
+    data = load_data(name)
+    for k, v in data.stimulus_set.stimulus_paths.items():
+        data.stimulus_set.stimulus_paths[k] = v.replace('/upschrimpf2', '')
+    return data
 
-
-# savasegal2023
-for movie in ["Defeat.mp4", "Growth.mp4", "Iteration.mp4", "Lemonade.mp4"]:
-    name = f'SavaSegal2023-fMRI-{movie}'[:-4].lower()
-    print(f"Saving {name} to cache...")
-    data = savasegal2023.load_dataset(movie)
-    data_store.store(data, name)
-
-# keles2024
-name = 'keles2024-fmri'
-print(f"Saving {name} to cache...")
-data = keles2024.load_dataset()
-data_store.store(data, name)
-
-# berezutskaya2021
-name = 'berezutskaya2021-fmri'
-print(f"Saving {name} to cache...")
-data = berezutskaya2021.load_dataset()
-data_store.store(data, name)
-
-# mcmahon2023
-name = 'mcmahon2023-fmri'
-print(f"Saving {name} to cache...")
-data = mcmahon2023.load_dataset()
-data_store.store(data, name)
-
-# lahner2024
-name = 'lahner2024-fmri'
-print(f"Saving {name} to cache...")
-data = lahner2024.load_dataset()
-data_store.store(data, name)
+for name in [
+    "savasegal2023-fmri-defeat",
+    "savasegal2023-fmri-growth",
+    "savasegal2023-fmri-iteration",
+    "savasegal2023-fmri-lemonade",
+    "keles2024-fmri",
+    "berezutskaya2021-fmri",
+    "lahner2024-fmri",
+    "mcmahon2023-fmri",
+]:
+    # if data_store.exists(name):
+    #     print(f"Dataset {name} already exists in cache, skipping...")
+    # else:
+        print(f"Saving {name} to cache...")
+        # load from brainscore
+        data = _fake_load_from_brainscore(name)
+        data_store.store(data, name)

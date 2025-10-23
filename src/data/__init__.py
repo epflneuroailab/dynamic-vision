@@ -1,3 +1,4 @@
+import src.config
 from ..store import pickle_store
 
 data_store = pickle_store.add_node("data")
