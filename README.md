@@ -10,7 +10,7 @@ dataset and uses linear decoders to predict behavioural choices,
 fMRI signals or standard computer‑vision tasks.
 
 The code builds on the
-[BrainScore‑Vision](https://github.com/brain-score/vision) tools for
+[BrainScore‑Vision](https://github.com/brain-score/vision) (please use this [fork](https://github.com/YingtianDt/vision.git) for now) tools for
 loading models and brain datasets.  Static image architectures are
 optionally converted into temporal models, and a handful of decoders
 (ridge regression or logistic regression) are used to report
@@ -79,7 +79,8 @@ downsampling, temporal conversion and random initialization.
 ```bash
 # install core dependencies
 pip install numpy scipy pandas scikit-learn torch torchvision h5py matplotlib opencv-python
-pip install brainscore-core brainscore-vision brainio nilearn
+pip install brainscore-core brainio nilearn
+pip install git+https://github.com/YingtianDt/vision.git
 pip install git+https://github.com/YingtianDt/neuroparc.git
 ```
 
@@ -94,17 +95,6 @@ Activate your environment, ensure the cache variables are set and run
 one of the scoring scripts.  Each takes a `--model` argument plus
 dataset/task names.  Examples:
 
-* **Behaviour** – compare a model to human choices:
-  ```bash
-  python -m src.data.behaviour.cache
-  python score_behaviour.py --model alexnet --tasks rajalingham2018
-  ```
-* **Electrodes** – fit the model to neuronal recordings:
-  ```bash
-  python -m src.data.electrodes.cache
-  python score_electrodes.py --model resnet50_imagenet_full \
-    --datasets freemanziemba2013-V4 crcns-pvc1
-  ```
 * **fMRI** – evaluate on one or more fMRI datasets (optionally convolving with an HRF):
   ```bash
   python -m src.data.fmri.cache
@@ -115,10 +105,21 @@ dataset/task names.  Examples:
   # or a subset of datasets
   python score_fmri.py --model r3d_18 --datasets mcmahon2023-fmri keles2024-fmri
   ```
+* **Behaviour** – compare a model to human choices:
+  ```bash
+  python -m src.data.behaviour.cache
+  python score_behaviour.py --model alexnet --tasks rajalingham2018
+  ```
 * **Tasks** – run standard vision benchmarks using logistic or ridge decoding:
   ```bash
   python -m src.data.tasks.cache
   python score_task.py --model resnet50_imagenet_full --tasks imagenet2012 selfmotion
+  ```
+* **Electrodes** – (unsupported yet) fit the model to neuronal recordings:
+  ```bash
+  python -m src.data.electrodes.cache
+  python score_electrodes.py --model resnet50_imagenet_full \
+    --datasets freemanziemba2013-V4 crcns-pvc1
   ```
 
 ## Caching

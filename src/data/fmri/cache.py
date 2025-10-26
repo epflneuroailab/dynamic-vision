@@ -1,30 +1,23 @@
 import os
 import pickle
 from .. import data_store
+from brainscore_vision import load_dataset
 
-def _fake_load_from_brainscore(name):
-    import sys
-    sys.path.insert(0, '/mnt/scratch/ytang/migrate')
-    from datasets import load_data
-    data = load_data(name)
-    for k, v in data.stimulus_set.stimulus_paths.items():
-        data.stimulus_set.stimulus_paths[k] = v.replace('/upschrimpf2', '')
-    return data
 
-for name in [
-    "savasegal2023-fmri-defeat",
-    "savasegal2023-fmri-growth",
-    "savasegal2023-fmri-iteration",
-    "savasegal2023-fmri-lemonade",
-    "keles2024-fmri",
-    "berezutskaya2021-fmri",
-    "lahner2024-fmri",
-    "mcmahon2023-fmri",
+for (name, dataset_id) in [
+    ("savasegal2023-fmri-defeat", 'Savageal2023-fMRI-Defeat'),
+    ("savasegal2023-fmri-growth", 'Savageal2023-fMRI-Growth'),
+    ("savasegal2023-fmri-iteration", 'Savageal2023-fMRI-Iteration'),
+    ("savasegal2023-fmri-lemonade", 'Savageal2023-fMRI-Lemonade'),
+    ("keles2024-fmri", 'Keles2024-FMRI'),
+    ("berezutskaya2021-fmri", 'Berezutskaya2021-FMRI'),
+    ("lahner2024-fmri", "Lahner2024-fMRI"),
+    ("mcmahon2023-fmri", "McMahon2023-fMRI"),
 ]:
-    # if data_store.exists(name):
-    #     print(f"Dataset {name} already exists in cache, skipping...")
-    # else:
+    if data_store.exists(name):
+        print(f"Dataset {name} already exists in cache, skipping...")
+    else:
         print(f"Saving {name} to cache...")
         # load from brainscore
-        data = _fake_load_from_brainscore(name)
+        data = load_dataset(dataset_id)
         data_store.store(data, name)
