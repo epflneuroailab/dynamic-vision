@@ -1,20 +1,30 @@
 import os
 
 
-# dir_path = os.path.dirname(os.path.abspath(__file__))
-dir_path = "/mnt/scratch/ytang/migrate"
-CACHE_HOME = os.path.join(dir_path, 'cache')
+# Detect if .env file exists and load it
+home_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(home_path, '.env')
+if os.path.exists(env_path):
+    from dotenv import load_dotenv
+    load_dotenv(env_path, override=True)
 
-os.environ["RESULTCACHING_HOME"] = f"{CACHE_HOME}/.resultcaching"
-os.environ['MMAP_HOME'] = f'{CACHE_HOME}/.mmap'
-os.environ["BRAINIO_HOME"] = f"{CACHE_HOME}/.brainio2"
-os.environ["BRAINSCORE_HOME"] = f"{CACHE_HOME}/.brain-score"
-os.environ['TORCH_HOME'] = f'{CACHE_HOME}/.torch'
-os.environ['HF_HOME'] = f'{CACHE_HOME}/.hf'
-os.environ["STORE_HOME"] = f"{CACHE_HOME}/.store"
+CACHE_HOME = os.getenv('CACHE_HOME', os.path.dirname(os.path.abspath(__file__)) + '/cache')
 
-os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
-os.environ["RESULTCACHING_DISABLE"] = '0'
+defaults = {
+    "RESULTCACHING_HOME": f"{CACHE_HOME}/.resultcaching",
+    "MMAP_HOME": f"{CACHE_HOME}/.mmap",
+    "BRAINIO_HOME": f"{CACHE_HOME}/.brainio2",
+    "BRAINSCORE_HOME": f"{CACHE_HOME}/.brain-score",
+    "TORCH_HOME": f"{CACHE_HOME}/.torch",
+    "HF_HOME": f"{CACHE_HOME}/.hf",
+    "STORE_HOME": f"{CACHE_HOME}/.store",
+    "NO_ALBUMENTATIONS_UPDATE": "1",
+    "RESULTCACHING_DISABLE": '0',
+}
+
+for key, value in defaults.items():
+    if key not in os.environ:
+        os.environ[key] = value
 
 
 import warnings

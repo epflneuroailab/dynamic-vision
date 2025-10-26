@@ -8,8 +8,13 @@ def main(args):
 
     for i, data_type in enumerate(args.data_types):
         if data_type == "fmri":
+            if args.data_names is not None:
+                raise NotImplementedError("Specifying data names is not supported for fMRI yet.")
             data[i] = {"combined_fmri": data[i]}
             ceiling = get_ceiling(args)
+        elif data_type == "task":
+            names = args.data_names if args.data_names is not None else data[i].keys()
+            data[i] = {name: data[i][name] for name in names}
 
     for datum, data_type in zip(data, args.data_types):
         for benchmark in datum:
@@ -25,7 +30,7 @@ def main(args):
             best_models = [models[i] for i in best_indices]
             best_model_scores = np.array(model_scores)[best_indices]
 
-            print('\n' + benchmark)
+            print('\n')
             for i, model in enumerate(best_models):
                 print(f"{benchmark} {model}: {best_model_scores[i]:.4f}")
 
@@ -34,6 +39,7 @@ if __name__ == "__main__":
     args = get_args(
         ("--top_k", dict(default=None, type=int)),
         ("--data_types", dict(default=["fmri"], nargs='+', type=str)),
+        ("--data_names", dict(default=None, nargs='+', type=str)),
         ("--models", dict(default=ALL_MODELS, nargs='+', type=str))
     )
     main(args)
