@@ -1,0 +1,83 @@
+EARLY = [
+    "V1",
+    "V2",
+    "V3",
+]
+
+STREAMS = {
+    "Early": EARLY,
+    "Ventral": [
+        "V4",
+        "V8",
+        "PIT",
+        "FFC",
+        "VVC",
+        "VMV3",
+        "VMV2",
+        "VMV1",
+        "PHA3",
+        "PHA2",
+    ],
+    "Dorsal": [
+        "V3A",
+        "V6",
+        "V6A",
+        "V7",
+        "IPS1",
+        "IP0",
+        "IP1",
+
+        "MIP",
+        "VIP",
+        "LIPd",
+        "LIPv",
+        "AIP",
+        "7Pm",
+        "7Pl",
+        "7PC",
+        "7Am",
+        "7AL",
+
+        "LO1", 
+        "LO2", 
+        "LO3", 
+        "V4t",
+        "MT", 
+        "MST", 
+        "FST", 
+        "PH",
+    ],
+    "Dorso-dorsal": [
+        "V3A",
+        "V6",
+        "V6A",
+        "V7",
+        "IPS1",
+        "IP0",
+        "IP1",
+
+        "MIP",
+        "VIP",
+        "LIPd",
+        "LIPv",
+        "AIP",
+        "7Pm",
+        "7Pl",
+        "7PC",
+        "7Am",
+        "7AL",
+    ],
+    "Ventro-dorsal": [
+        "LO1", 
+        "LO2", 
+        "LO3", 
+        "V4t",
+        "MT", 
+        "MST", 
+        "FST", 
+        "PH",
+    ],
+}
+
+STREAMS["D.-dorsal"] = STREAMS["Dorso-dorsal"]
+STREAMS["V.-dorsal"] = STREAMS["Ventro-dorsal"]

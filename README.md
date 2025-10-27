@@ -44,7 +44,9 @@ four scoring scripts.  Key components include:
 
 Running a script loads the requested model, computes activations,
 fits a linear decoder and reports test/validation scores.  Results
-and activations are cached on disk.
+and activations are cached on disk (`cache/.store` by default).
+
+The `scripts/figures` contains codes to reproduce results in the paper, once you run the scoring.
 
 ## Datasets and tasks
 
@@ -76,6 +78,9 @@ downsampling, temporal conversion and random initialization.
 
 ## Setup
 
+Please use Python==3.11 for this repo. Any operating system should be compatible.
+
+Install the following packages (typically takes ~20 mins):
 ```bash
 # install core dependencies
 pip install numpy scipy pandas scikit-learn torch torchvision h5py matplotlib opencv-python
@@ -88,6 +93,14 @@ Set `RESULTCACHING_HOME`, `BRAINIO_HOME`, `BRAINSCORE_HOME`, `TORCH_HOME`,
 `HF_HOME` and `MMAP_HOME` to directories on your machine where the
 code can store intermediate results and locate stimuli.  See
 `src/config.py` for examples.
+
+## Reproducibility
+
+In the **Usage** section below, we describe how to score models on different benchmarks. Results are stored in the cache at `cache/.store` (by default). After scoring, reproduce all main figures by running `bash scripts/figures/run_all.sh` (typically takes ~15 mins), or generate individual plots like running `python -m scripts.figures.f3.a` for Figure 3(a).
+
+**Note:** The full scoring procedure is extremely computationally intensive and generates ~34TB of data. To facilitate quick reproduction, we provide a [pre-computed cache]() containing only the essential data needed for figure generation.
+
+Download the cache and extract it to `cache/.store`. To use a different cache location, modify the "store" path in `src/config.py`.
 
 ## Usage
 

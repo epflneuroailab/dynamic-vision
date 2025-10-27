@@ -1,0 +1,1 @@
+print('No data for this figure.')
