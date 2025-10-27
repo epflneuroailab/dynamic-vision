@@ -104,6 +104,8 @@ Download the cache and extract it to `cache/.store`. To use a different cache lo
 
 ## Usage
 
+**Note:** Currently, due to copyright restrictions, the following benchmarks (processed brain recordings and stimuli) are not publicly available; however, they can be provided upon reasonable request.
+
 Activate your environment, ensure the cache variables are set and run
 one of the scoring scripts.  Each takes a `--model` argument plus
 dataset/task names.  Examples:
