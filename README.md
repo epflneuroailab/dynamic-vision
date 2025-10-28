@@ -15,7 +15,7 @@ loading models and brain datasets.  Static image architectures are
 optionally converted into temporal models, and a handful of decoders
 (ridge regression or logistic regression) are used to report
 alignment scores.
-The complete dataset loading process is currently in progress and will be updated shortly.
+The complete dataset loading process is currently in progress and will be updated.
 
 ## Structure
 
@@ -48,34 +48,6 @@ and activations are cached on disk (`cache/.store` by default).
 
 The `scripts/figures` contains codes to reproduce results in the paper, once you run the scoring.
 
-## Datasets and tasks
-
-The `data` module defines several groups of inputs:
-
-* **fMRI datasets** – the `DATASETS` list includes multiple
-  recordings such as *savasegal2023*, *keles2024* and *mcmahon2023*.
-* **Behavioural tasks** – experiments like *ilic2022–ucf5* and
-  *rajalingham2018* are listed in `BEHAVIOURS` and come with built‑in
-  metric.
-* **Electrode recordings** – recordings from areas V1, V2, V4, IT and
-  CRCNS datasets are enumerated in `ELECTRODES`.
-* **Standard tasks** – classification or action‑recognition tasks
-  (ImageNet‑100, Kinetics‑400, self‑motion and others) are defined in
-  `TASKS` along with the appropriate decoder type.  A
-  separate `STATIC` list identifies tasks that involve single images
-  rather than video frames.
-
-## Supported models
-
-Dozens of models are available out‑of‑the‑box.  Static image networks
-(e.g. ResNet, EfficientNet, DeiT and ConvNeXt variants)
-can be transformed into temporal models.  Video‑centric architectures
-include 3D CNNs and transformers such as R3D‑18, SlowFast, Video Swin
-and TimeSformer, as well as masked autoencoders,
-audio‑video networks and recurrent predictors.  See
-`src/models/groups.py` for the full list.  The loader handles
-downsampling, temporal conversion and random initialization.
-
 ## Setup
 
 Please use Python==3.11 for this repo. Any operating system should be compatible.
@@ -96,11 +68,12 @@ code can store intermediate results and locate stimuli.  See
 
 ## Reproducibility
 
-In the **Usage** section below, we describe how to score models on different benchmarks. Results are stored in the cache at `cache/.store` (by default). After scoring, reproduce all main figures by running `bash scripts/figures/run_all.sh` (typically takes ~15 mins), or generate individual plots like running `python -m scripts.figures.f3.a` for Figure 3(a).
+In the **Usage** section below, we describe how to score models on different benchmarks. Results are stored in the cache at `cache/.store` (by default). After scoring, reproduce all main figures by running `bash make_figures.sh` (typically takes ~15 mins), or generate individual plots like running `python -m scripts.figures.f3.a` for Figure 3(a), for example. The reproduced figures will be stored under `scripts/figures/cache`.
 
-**Note:** The full scoring procedure is extremely computationally intensive and generates ~34TB of data. To facilitate quick reproduction, we provide a [pre-computed cache]() containing only the essential data needed for figure generation.
+**Note:** The full scoring procedure is extremely computationally intensive and generates ~34TB of data. To facilitate quick reproduction, we provide a pre-computed cache containing only the essential data needed for figure generation.
+You can get the cache by running `bash download_cache.sh`. The required storage is about 60GB.
 
-Download the cache and extract it to `cache/.store`. To use a different cache location, modify the "store" path in `src/config.py`.
+The cache will be downloaded and extracted to `cache/.store`. To use a different cache location, modify the "store" path in `src/config.py`.
 
 ## Usage
 
@@ -136,6 +109,36 @@ dataset/task names.  Examples:
   python score_electrodes.py --model resnet50_imagenet_full \
     --datasets freemanziemba2013-V4 crcns-pvc1
   ```
+
+
+## Datasets and tasks
+
+The `data` module defines several groups of inputs:
+
+* **fMRI datasets** – the `DATASETS` list includes multiple
+  recordings such as *savasegal2023*, *keles2024* and *mcmahon2023*.
+* **Behavioural tasks** – experiments like *ilic2022–ucf5* and
+  *rajalingham2018* are listed in `BEHAVIOURS` and come with built‑in
+  metric.
+* **Electrode recordings** – recordings from areas V1, V2, V4, IT and
+  CRCNS datasets are enumerated in `ELECTRODES`.
+* **Standard tasks** – classification or action‑recognition tasks
+  (ImageNet‑100, Kinetics‑400, self‑motion and others) are defined in
+  `TASKS` along with the appropriate decoder type.  A
+  separate `STATIC` list identifies tasks that involve single images
+  rather than video frames.
+
+## Supported models
+
+Dozens of models are available out‑of‑the‑box.  Static image networks
+(e.g. ResNet, EfficientNet, DeiT and ConvNeXt variants)
+can be transformed into temporal models.  Video‑centric architectures
+include 3D CNNs and transformers such as R3D‑18, SlowFast, Video Swin
+and TimeSformer, as well as masked autoencoders,
+audio‑video networks and recurrent predictors.  See
+`src/models/groups.py` for the full list.  The loader handles
+downsampling, temporal conversion and random initialization.
+
 
 ## Caching
 
